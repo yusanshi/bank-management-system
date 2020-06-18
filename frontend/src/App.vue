@@ -1,32 +1,89 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <!-- TODO don't hard code the color -->
+    <v-snackbar
+      v-model="infoSnackbar"
+      :timeout="2000"
+      :top="true"
+      color="#42A5F5"
+    >
+      {{ getInfo }}
+    </v-snackbar>
+    <v-snackbar
+      v-model="successSnackbar"
+      :timeout="2000"
+      :top="true"
+      color="#43A047"
+    >
+      {{ getSuccess }}
+    </v-snackbar>
+    <v-snackbar
+      v-model="errorSnackbar"
+      :timeout="2000"
+      :top="true"
+      color="#EF5350"
+    >
+      {{ getError }}
+    </v-snackbar>
+    <router-view />
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import Vue from 'vue';
+import { mapGetters, mapMutations } from 'vuex';
 
-#nav {
-  padding: 30px;
-}
+export default Vue.extend({
+  name: 'App',
+  metaInfo: {
+    titleTemplate: `%s - ${process.env.VUE_APP_SITE_NAME}`,
+  },
+  computed: {
+    ...mapGetters(['getInfo', 'getSuccess', 'getError']),
+  },
+  data() {
+    return {
+      infoSnackbar: false,
+      successSnackbar: false,
+      errorSnackbar: false,
+    };
+  },
+  methods: {
+    ...mapMutations(['setInfo', 'setSuccess', 'setError']),
+  },
+  watch: {
+    getInfo(val) {
+      if (val !== '') {
+        this.infoSnackbar = true;
+      }
+    },
+    infoSnackbar(val) {
+      if (!val) {
+        this.setInfo('');
+      }
+    },
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+    getSuccess(val) {
+      if (val !== '') {
+        this.successSnackbar = true;
+      }
+    },
+    successSnackbar(val) {
+      if (!val) {
+        this.setSuccess('');
+      }
+    },
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+    getError(val) {
+      if (val !== '') {
+        this.errorSnackbar = true;
+      }
+    },
+    errorSnackbar(val) {
+      if (!val) {
+        this.setError('');
+      }
+    },
+  },
+});
+</script>
