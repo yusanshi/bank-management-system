@@ -24,6 +24,9 @@ export default new Vuex.Store({
     logged(state) {
       return state.user.token !== null;
     },
+    getToken(state) {
+      return state.user.token;
+    },
     getUser(state) {
       return state.user;
     },
@@ -82,10 +85,10 @@ export default new Vuex.Store({
     },
     logout({ commit, getters }) {
       return new Promise((resolve, reject) => {
-        // axios.post(`${API_URL}/logout`, {}, {
-        //   headers: { 'X-Token': getters.getUser.token },
-        // })
-        Promise.resolve() // TODO
+        axios.post(`${API_URL}/logout`, {}, {
+          headers: { 'X-Token': getters.getToken },
+        })
+        // Promise.resolve() // TODO
           .then(() => {
             commit('setUser', {
               username: null,

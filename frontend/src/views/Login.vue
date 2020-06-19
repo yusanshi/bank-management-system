@@ -54,7 +54,7 @@ export default Vue.extend({
     title: '登录',
   },
   computed: {
-    ...mapGetters(['logged', 'getError']),
+    ...mapGetters(['logged']),
   },
   data() {
     return {

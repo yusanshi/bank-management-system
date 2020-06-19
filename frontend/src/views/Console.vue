@@ -57,7 +57,7 @@ export default Vue.extend({
     NavigationDrawer,
   },
   computed: {
-    ...mapGetters(['logged', 'getError']),
+    ...mapGetters(['logged']),
     siteName() {
       return process.env.VUE_APP_SITE_NAME;
     },

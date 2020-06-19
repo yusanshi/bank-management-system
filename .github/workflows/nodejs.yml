@@ -1,0 +1,33 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: master
+
+defaults:
+  run:
+    working-directory: ./frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: yarn install
+      - run: yarn build
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          TARGET_DIR: ${{ secrets.TARGET_DIR }}
+        run: |
+          SSH_PATH="$HOME/.ssh"
+          mkdir "$SSH_PATH"
+          echo "$SSH_PRIVATE_KEY" > "$SSH_PATH/id_rsa"
+          chmod 600 "$SSH_PATH/id_rsa"
+          ssh-keyscan yusanshi.com >> "$SSH_PATH/known_hosts"
+          rsync -az --delete -e "ssh -i $SSH_PATH/id_rsa" ./dist/ "github@yusanshi.com:$TARGET_DIR"
