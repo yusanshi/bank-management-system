@@ -39,7 +39,7 @@
       </v-toolbar-items>
     </v-app-bar>
     <v-content>
-      <v-container fluid>
+      <v-container class="mt-2">
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -101,6 +101,7 @@ export default Vue.extend({
         {
           icon: 'mdi-logout',
           title: '退出',
+          // eslint-disable-next-line
           click: (this as any).onLogout,
         },
       ],
