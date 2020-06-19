@@ -2,8 +2,8 @@ openapi: 3.0.1
 info:
   title: 银行管理系统
   description: 银行管理系统的数据库设计文档和 API 文档。
-  
-  
+
+
     状态码约定：为简化设计，除了 `200:OK`（请求成功时）和 `401:Unauthorized`（登录时账号或密码不正确，或请求时 token
     不正确时）外，其他的报错都返回 `422:Unprocessable Entity`，但返回 422 的同时须在 body
     中返回报错信息供客户端显示（若客户端在使用部分接口时，需对都返回 422 的不同结果做区分，则再对相关接口另行设置状态码）。
@@ -17,9 +17,9 @@ externalDocs:
   description: View source on GitHub
   url: https://github.com/yusanshi/bank-management-system
 servers:
-- url: https://bank.yusanshi.com/api/v1
+  - url: https://bank.yusanshi.com/api/v1
 paths:
-  /login:
+  /user/login:
     post:
       tags:
         - user
@@ -60,7 +60,7 @@ paths:
                       - 账号或密码错误
         '422':
           $ref: '#/components/responses/Unprocessable'
-  /logout:
+  /user/logout:
     post:
       tags:
         - user
@@ -77,9 +77,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
-  
-  /password:
+
+  /user/password:
     put:
       tags:
         - user
@@ -105,7 +104,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-  
+
   /client:
     get:
       tags:
@@ -128,7 +127,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     post:
       tags:
         - client
@@ -142,7 +141,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Client'
-                
+
       responses:
         '200':
           description: 添加成功
@@ -150,7 +149,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
- 
+
   /client/{idNumber}:
     get:
       tags:
@@ -176,7 +175,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     put:
       tags:
         - client
@@ -195,7 +194,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Client'
-                
+
       responses:
         '200':
           description: 修改成功
@@ -203,7 +202,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     delete:
       tags:
         - client
@@ -217,7 +216,7 @@ paths:
           in: header
           schema:
             type: string
-                
+
       responses:
         '200':
           description: 删除成功
@@ -225,8 +224,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-      
-
 
   /account:
     get:
@@ -250,7 +247,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     post:
       tags:
         - account
@@ -264,7 +261,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Account'
-                
+
       responses:
         '200':
           description: 添加成功
@@ -272,7 +269,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
- 
+
   /account/{id}:
     get:
       tags:
@@ -298,7 +295,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     put:
       tags:
         - account
@@ -317,7 +314,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Account'
-                
+
       responses:
         '200':
           description: 修改成功
@@ -325,7 +322,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     delete:
       tags:
         - account
@@ -339,7 +336,7 @@ paths:
           in: header
           schema:
             type: string
-                
+
       responses:
         '200':
           description: 删除成功
@@ -347,7 +344,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-      
+
   /loan:
     get:
       tags:
@@ -370,7 +367,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     post:
       tags:
         - loan
@@ -384,7 +381,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Loan'
-                
+
       responses:
         '200':
           description: 添加成功
@@ -392,7 +389,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
- 
+
   /loan/{id}:
     get:
       tags:
@@ -418,7 +415,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     put:
       tags:
         - loan
@@ -437,7 +434,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Loan'
-                
+
       responses:
         '200':
           description: 修改成功
@@ -445,7 +442,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
+
     delete:
       tags:
         - loan
@@ -459,7 +456,7 @@ paths:
           in: header
           schema:
             type: string
-                
+
       responses:
         '200':
           description: 删除成功
@@ -467,7 +464,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-      
+
   /bank:
     get:
       tags:
@@ -490,8 +487,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
-          
-          
+
 components:
   schemas:
     User:
@@ -510,7 +506,7 @@ components:
           type: integer
         user:
           $ref: '#/components/schemas/User/properties/username'
-          
+
     Client:
       type: object
       properties:
@@ -525,14 +521,14 @@ components:
         contactName:
           type: string
         contactPhoneNumber:
-          type: string   
+          type: string
         contactEmail:
           type: string
         contactRelationship:
           type: string
         staff:
           $ref: '#/components/schemas/Staff/properties/idNumber'
-          
+
     Account:
       type: object
       properties:
@@ -544,7 +540,7 @@ components:
           type: integer
         bank:
           $ref: '#/components/schemas/Bank/properties/id'
-          
+
     DepositAccount:
       type: object
       properties:
@@ -554,7 +550,7 @@ components:
           type: number
         currencyKind:
           type: string
-          
+
     ChequeAccount:
       type: object
       properties:
@@ -572,7 +568,7 @@ components:
           $ref: '#/components/schemas/Account/properties/id'
         lastVisitDate:
           type: number
-          
+
     Staff:
       type: object
       properties:
@@ -590,7 +586,7 @@ components:
           type: string
         department:
           $ref: '#/components/schemas/Department/properties/id'
-        
+
     Department:
       type: object
       properties:
@@ -602,7 +598,7 @@ components:
           type: string
         manager:
           $ref: '#/components/schemas/Staff/properties/idNumber'
-    
+
     Bank:
       type: object
       properties:
@@ -612,7 +608,6 @@ components:
           type: string
         city:
           type: string
-
 
     Loan:
       type: object
@@ -625,7 +620,7 @@ components:
           $ref: '#/components/schemas/Bank/properties/id'
         client:
           $ref: '#/components/schemas/Client/properties/idNumber'
-          
+
     Payment:
       type: object
       properties:
@@ -637,8 +632,7 @@ components:
           type: number
         loan:
           $ref: '#/components/schemas/Loan/properties/id'
-          
-          
+
   responses:
     Unauthorized:
       description: token 信息无效
@@ -651,7 +645,7 @@ components:
                 type: string
                 enum:
                   - token 信息无效
-                  
+
     Unprocessable:
       description: 请求失败（General，应在 message 中附上报错信息）
       content:
