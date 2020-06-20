@@ -1,14 +1,18 @@
 from bank import db
 import uuid
+from datetime import datetime
+from flask import current_app
 
 
 class Token(db.Model):
-    __tablename__ = 'tokens'
-    token = db.Column(db.String, default=uuid.uuid4,
-                      primary_key=True, unique=True)
-    expiresAt = db.Column(db.DateTime(timezone=True),
-                          nullable=False, default=db.func.now())  # TODO shift time by TOKEN_EXPIRE
-    user = db.Column(db.String, nullable=False)  # TODO
-
-    def __repr__(self):
-        return '<Token for {}>'.format(self.user)
+    token = db.Column(db.String(64),
+                      default=lambda: str(uuid.uuid4()),
+                      primary_key=True)
+    expiresAt = db.Column(db.Integer,
+                          nullable=False,
+                          default=lambda: int(datetime.utcnow().timestamp()) +
+                          current_app.config['TOKEN_EXPIRE'])
+    user_ref = db.Column(db.String(64),
+                         db.ForeignKey('user.username'),
+                         nullable=False)
+    user = db.relationship('User', backref='tokens')

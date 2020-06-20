@@ -38,11 +38,11 @@
         </v-menu>
       </v-toolbar-items>
     </v-app-bar>
-    <v-content>
-      <v-container class="mt-2">
+    <v-main>
+      <v-container fluid>
         <router-view></router-view>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -83,7 +83,19 @@ export default Vue.extend({
         {
           icon: 'mdi-folder-account',
           text: '账户管理',
-          to: '/console/account',
+          model: false,
+          children: [
+            {
+              icon: 'mdi-blank',
+              text: '储蓄账户',
+              to: '/console/account/deposit',
+            },
+            {
+              icon: 'mdi-blank',
+              text: '支票账户',
+              to: '/console/account/cheque',
+            },
+          ],
         },
         {
           icon: 'mdi-account-cash',
@@ -92,7 +104,7 @@ export default Vue.extend({
         },
         { heading: '其他' },
         {
-          icon: 'mdi-cog',
+          icon: 'mdi-shield-key',
           text: '密码修改',
           to: '/console/password',
         },
@@ -101,7 +113,6 @@ export default Vue.extend({
         {
           icon: 'mdi-logout',
           title: '退出',
-          // eslint-disable-next-line
           click: (this as any).onLogout,
         },
       ],

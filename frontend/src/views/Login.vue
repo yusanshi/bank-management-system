@@ -1,9 +1,10 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
+            <v-alert icon="mdi-duck">账号：admin，密码：p@ssword</v-alert>
             <v-card class="elevation-12 mb-6">
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title>登录</v-toolbar-title>
@@ -40,7 +41,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

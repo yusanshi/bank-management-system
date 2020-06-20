@@ -27,8 +27,12 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/components/console/Client.vue'),
       },
       {
-        path: 'account',
-        component: () => import('@/components/console/Account.vue'),
+        path: 'account/deposit',
+        component: () => import('@/components/console/AccountDeposit.vue'),
+      },
+      {
+        path: 'account/cheque',
+        component: () => import('@/components/console/AccountCheque.vue'),
       },
       {
         path: 'loan',

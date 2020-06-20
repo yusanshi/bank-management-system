@@ -58,12 +58,11 @@ export default new Vuex.Store({
   actions: {
     login({ commit }, payload) {
       return new Promise((resolve, reject) => {
-        // axios.post(`${API_URL}/login`,
-        //   {
-        //     username: payload.username,
-        //     password: payload.password,
-        //   })
-        Promise.resolve({ data: 'TOKEN' }) // TODO
+        axios.post(`${API_URL}/user/login`,
+          {
+            username: payload.username,
+            password: payload.password,
+          })
           .then((response) => {
             const user = {
               username: payload.username,
@@ -85,10 +84,9 @@ export default new Vuex.Store({
     },
     logout({ commit, getters }) {
       return new Promise((resolve, reject) => {
-        // axios.post(`${API_URL}/logout`, {}, {
-        //   headers: { 'X-Token': getters.getToken },
-        // })
-        Promise.resolve() // TODO
+        axios.post(`${API_URL}/user/logout`, {}, {
+          headers: { 'X-Token': getters.getToken },
+        })
           .then(() => {
             commit('setUser', {
               username: null,

@@ -7,6 +7,9 @@ info:
     状态码约定：为简化设计，除了 `200:OK`（请求成功时）和 `401:Unauthorized`（登录时账号或密码不正确，或请求时 token
     不正确时）外，其他的报错都返回 `422:Unprocessable Entity`，但返回 422 的同时须在 body
     中返回报错信息供客户端显示（若客户端在使用部分接口时，需对都返回 422 的不同结果做区分，则再对相关接口另行设置状态码）。
+    
+    
+    数据库设计：`XXX_ref` 表示一个 Foreign key。
   contact:
     email: yulei2018@gmail.com
   license:
@@ -79,7 +82,7 @@ paths:
           $ref: '#/components/responses/Unprocessable'
 
   /user/password:
-    put:
+    post:
       tags:
         - user
       parameters:
@@ -105,7 +108,7 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /client:
+  /client/:
     get:
       tags:
         - client
@@ -122,7 +125,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Client'
+                  allOf:
+                    - $ref: '#/components/schemas/Client'
+                    - type: object
+                      properties:
+                        client_account_associations:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/ClientAndAccount'
+                          
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -140,7 +151,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Client'
+              allOf:
+                - $ref: '#/components/schemas/Client'
+                - type: object
+                  properties:
+                    client_account_associations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClientAndAccount'
 
       responses:
         '200':
@@ -150,41 +168,16 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /client/{idNumber}:
-    get:
-      tags:
-        - client
-      parameters:
-        - name: idNumber
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/Client/properties/idNumber'
-        - name: X-Token
-          in: header
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 获取成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Client'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '422':
-          $ref: '#/components/responses/Unprocessable'
-
+  /client/{id_number}:
     put:
       tags:
         - client
       parameters:
-        - name: idNumber
+        - name: id_number
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Client/properties/idNumber'
+            $ref: '#/components/schemas/Client/properties/id_number'
         - name: X-Token
           in: header
           schema:
@@ -193,7 +186,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Client'
+              allOf:
+                - $ref: '#/components/schemas/Client'
+                - type: object
+                  properties:
+                    client_account_associations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClientAndAccount'
 
       responses:
         '200':
@@ -207,11 +207,11 @@ paths:
       tags:
         - client
       parameters:
-        - name: idNumber
+        - name: id_number
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Client/properties/idNumber'
+            $ref: '#/components/schemas/Client/properties/id_number'
         - name: X-Token
           in: header
           schema:
@@ -225,7 +225,7 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /account:
+  /account/:
     get:
       tags:
         - account
@@ -242,7 +242,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Account'
+                  allOf:
+                    - $ref: '#/components/schemas/Account'
+                    - type: object
+                      properties:
+                        client_account_associations:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/ClientAndAccount'
+                            
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -260,7 +268,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              allOf:
+                - $ref: '#/components/schemas/Account'
+                - type: object
+                  properties:
+                    client_account_associations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClientAndAccount'
 
       responses:
         '200':
@@ -271,31 +286,6 @@ paths:
           $ref: '#/components/responses/Unprocessable'
 
   /account/{id}:
-    get:
-      tags:
-        - account
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/Account/properties/id'
-        - name: X-Token
-          in: header
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 获取成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '422':
-          $ref: '#/components/responses/Unprocessable'
-
     put:
       tags:
         - account
@@ -313,7 +303,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              allOf:
+                - $ref: '#/components/schemas/Account'
+                - type: object
+                  properties:
+                    client_account_associations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClientAndAccount'
 
       responses:
         '200':
@@ -345,7 +342,7 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /loan:
+  /loan/:
     get:
       tags:
         - loan
@@ -362,7 +359,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Loan'
+                  allOf:
+                    - $ref: '#/components/schemas/Loan'
+                    - type: object
+                      properties:
+                        payments:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/Payment'
+                        clients:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/Client/properties/id_number'
+                            
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -380,42 +389,36 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Loan'
+              allOf:
+                - $ref: '#/components/schemas/Loan'
+                - type: object
+                  properties:
+                    payments:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Payment'
+                    clients:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Client/properties/id_number'
 
       responses:
         '200':
           description: 添加成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
 
   /loan/{id}:
-    get:
-      tags:
-        - loan
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/Loan/properties/id'
-        - name: X-Token
-          in: header
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 获取成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Loan'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '422':
-          $ref: '#/components/responses/Unprocessable'
-
     put:
       tags:
         - loan
@@ -465,7 +468,7 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /bank:
+  /bank/:
     get:
       tags:
         - bank
@@ -488,6 +491,30 @@ paths:
         '422':
           $ref: '#/components/responses/Unprocessable'
 
+
+  /staff/:
+    get:
+      tags:
+        - staff
+      parameters:
+        - name: X-Token
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Staff'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+          
 components:
   schemas:
     User:
@@ -504,30 +531,30 @@ components:
           type: string
         expires:
           type: integer
-        user:
+        user_ref:
           $ref: '#/components/schemas/User/properties/username'
 
     Client:
       type: object
       properties:
-        idNumber:
+        id_number:
           type: string
         name:
           type: string
-        phoneNumber:
+        phone_number:
           type: string
         address:
           type: string
-        contactName:
+        contact_name:
           type: string
-        contactPhoneNumber:
+        contact_phone_number:
           type: string
-        contactEmail:
+        contact_email:
           type: string
-        contactRelationship:
+        contact_relationship:
           type: string
-        staff:
-          $ref: '#/components/schemas/Staff/properties/idNumber'
+        staff_ref:
+          $ref: '#/components/schemas/Staff/properties/id_number'
 
     Account:
       type: object
@@ -536,55 +563,58 @@ components:
           type: string
         balance:
           type: number
-        openDate:
+        open_date:
           type: integer
-        bank:
-          $ref: '#/components/schemas/Bank/properties/id'
+        account_type:
+          type: string
+        bank_ref:
+          $ref: '#/components/schemas/Bank/properties/name'
+
 
     DepositAccount:
       type: object
       properties:
-        id:
+        id_ref:
           $ref: '#/components/schemas/Account/properties/id'
-        interestRate:
+        interest_rate:
           type: number
-        currencyKind:
+        currency_kind:
           type: string
 
     ChequeAccount:
       type: object
       properties:
-        id:
+        id_ref:
           $ref: '#/components/schemas/Account/properties/id'
         overdraft:
           type: number
 
-    ClientVisitAccount:
+    ClientAndAccount:
       type: object
       properties:
-        client:
-          $ref: '#/components/schemas/Client/properties/idNumber'
-        account:
+        client_ref:
+          $ref: '#/components/schemas/Client/properties/id_number'
+        account_ref:
           $ref: '#/components/schemas/Account/properties/id'
-        lastVisitDate:
+        last_visit_date:
           type: number
 
     Staff:
       type: object
       properties:
-        idNumber:
+        id_number:
           type: string
         name:
           type: string
-        phoneNumber:
+        phone_number:
           type: string
         address:
           type: string
-        joinedDate:
+        joined_date:
           type: integer
         kind:
           type: string
-        department:
+        department_ref:
           $ref: '#/components/schemas/Department/properties/id'
 
     Department:
@@ -596,14 +626,10 @@ components:
           type: string
         kind:
           type: string
-        manager:
-          $ref: '#/components/schemas/Staff/properties/idNumber'
 
     Bank:
       type: object
       properties:
-        id:
-          type: integer
         name:
           type: string
         city:
@@ -616,21 +642,22 @@ components:
           type: integer
         money:
           type: number
-        bank:
-          $ref: '#/components/schemas/Bank/properties/id'
-        client:
-          $ref: '#/components/schemas/Client/properties/idNumber'
+        status:
+          type: string
+        bank_ref:
+          $ref: '#/components/schemas/Bank/properties/name'
+
 
     Payment:
       type: object
       properties:
         id:
           type: integer
-        payDate:
+        pay_date:
           type: integer
         money:
           type: number
-        loan:
+        loan_ref:
           $ref: '#/components/schemas/Loan/properties/id'
 
   responses:
