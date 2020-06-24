@@ -45,8 +45,7 @@ def handle_all_account():
 @account_blueprint.route('/<string:id>', methods=['PUT', 'DELETE'])
 @token_required
 def handle_single_account(id):
-    query = Account.query.filter_by(id=id)
-    found_account = query.first()
+    found_account = Account.query.filter_by(id=id).first()
     if not found_account:
         return jsonify({'message': '找不到该账户'}), 422
 
@@ -74,7 +73,9 @@ def handle_single_account(id):
             db.session.add(x)
 
     elif request.method == 'DELETE':
-        query.delete()
+        for x in found_account.client_account_associations:
+            db.session.delete(x)
+        db.session.delete(found_account)
 
     db.session.commit()
     return jsonify({}), 200

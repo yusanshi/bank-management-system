@@ -4,6 +4,7 @@
     :items="formatItems(items, meta.headers)"
     class="elevation-6 pa-3"
     :search="search"
+    :custom-filter="customFilter"
     :loading="loading"
     no-data-text="无数据"
     no-results-text="无匹配数据"
@@ -19,7 +20,7 @@
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="在此输入关键词查询"
+          label="支持“|”和“&”的使用，但不能混用。如“北京 | 178”、“gmail.com & 159 & 安徽”。"
           single-line
           hide-details
         ></v-text-field>

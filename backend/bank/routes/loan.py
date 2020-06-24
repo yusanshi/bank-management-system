@@ -83,7 +83,6 @@ def handle_single_loan(id):
         return jsonify({'message': '找不到这笔贷款'}), 422
     if found_loan.status == '发放中':
         return jsonify({'message': '发放中的贷款不允许删除'}), 422
-    # TODO how to delete better
     for x in found_loan.payments:
         db.session.delete(x)
     for x in found_loan.loan_client_associations:

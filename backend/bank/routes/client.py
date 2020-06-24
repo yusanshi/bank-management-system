@@ -70,7 +70,6 @@ def handle_single_client(id_number):
             return jsonify({'message': '客户还有关联的账户，不允许删除'}), 422
         if len(found_client.loan_client_associations) != 0:
             return jsonify({'message': '客户还有关联的贷款记录，不允许删除'}), 422
-
         query.delete()
 
     db.session.commit()
