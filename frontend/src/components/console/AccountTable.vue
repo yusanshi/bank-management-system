@@ -14,8 +14,8 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <h1>{{ meta.title }}</h1>
-        <v-spacer></v-spacer>
+        <h1 class="hidden-xs-only">{{ meta.title }}</h1>
+        <v-spacer class="hidden-xs-only"></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"

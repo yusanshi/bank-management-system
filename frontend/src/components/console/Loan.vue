@@ -15,8 +15,8 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <h1>贷款</h1>
-        <v-spacer></v-spacer>
+        <h1 class="hidden-xs-only">贷款</h1>
+        <v-spacer class="hidden-xs-only"></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
