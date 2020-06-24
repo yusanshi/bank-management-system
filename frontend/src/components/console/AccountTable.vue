@@ -90,7 +90,7 @@
     <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length">
         <v-data-table
-          class="my-6 mx-16"
+          class="my-6 mx-6 mx-md-12"
           :headers="headers[expandingIndex].headers"
           :items="formatItems(item.client_account_associations, headers[expandingIndex].headers)"
           :dense="true"

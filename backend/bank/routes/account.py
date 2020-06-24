@@ -23,6 +23,10 @@ def handle_all_account():
             return jsonify({'message': '账户已存在'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
+        for k, v in request.json.items():
+            if isinstance(v, str):
+                if v.strip() == '':
+                    return jsonify({'message': f'{k} 值不能为空'}), 422
         if request.json['account_type'] == 'deposit':
             account = DepositAccount(**request.json)
         elif request.json['account_type'] == 'cheque':
@@ -51,7 +55,10 @@ def handle_single_account(id):
             return jsonify({'message': '不允许修改账户号'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
-        print(request.json)
+        for k, v in request.json.items():
+            if isinstance(v, str):
+                if v.strip() == '':
+                    return jsonify({'message': f'{k} 值不能为空'}), 422
         if request.json['account_type'] == 'deposit':
             DepositAccount.query.filter_by(id=id).update(request.json)
         elif request.json['account_type'] == 'cheque':

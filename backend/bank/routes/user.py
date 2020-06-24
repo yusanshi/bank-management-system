@@ -52,7 +52,7 @@ def change_password():
     if found_user.check_password(old_password):
         if old_password == new_password:
             return jsonify({'message': '新旧密码相同'}), 422
-        return jsonify({'message': 'DEMO站点，暂不支持修改密码'}), 422
+        return jsonify({'message': 'DEMO站点，密码将不会被更改'}), 422
         db.session.query(Token).filter_by(user=found_user).delete()
         found_user.password = generate_password_hash(new_password)
         db.session.add(found_user)

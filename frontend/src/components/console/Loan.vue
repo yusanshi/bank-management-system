@@ -111,7 +111,7 @@
     <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length">
         <v-data-table
-          class="my-6 mx-16"
+          class="my-6 mx-6 mx-md-12"
           :headers="headers[expandingIndex].payments.headers"
           :items="formatItems(item.payments, headers[expandingIndex].payments.headers)"
           :dense="true"
@@ -120,7 +120,7 @@
         ></v-data-table>
         <v-divider></v-divider>
         <v-data-table
-          class="my-6 mx-16"
+          class="my-6 mx-6 mx-md-12"
           :headers="headers[expandingIndex].clients.headers"
           :items="formatItems(item.clients, headers[expandingIndex].clients.headers)"
           :dense="true"
@@ -279,7 +279,6 @@ export default Vue.extend({
       this.dialog = true;
     },
     removeLoan(item: any) {
-      console.log(this.items);
       const index = this.items.indexOf(item);
       // eslint-disable-next-line no-restricted-globals, no-unused-expressions
       if (confirm('确定要删除此项吗？')) {

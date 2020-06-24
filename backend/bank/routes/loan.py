@@ -20,7 +20,15 @@ def handle_all_loan():
         } for loan in found_loans]), 200
     elif request.method == 'POST':
         clients = request.json.pop('clients')
+        if request.json['money'] <= 0:
+            return jsonify({'message': '贷款金额必须为正数'}), 422
+        if len(clients) == 0:
+            return jsonify({'message': '关联客户不能为空'}), 422
         del request.json['id']
+        for k, v in request.json.items():
+            if isinstance(v, str):
+                if v.strip() == '':
+                    return jsonify({'message': f'{k} 值不能为空'}), 422
         loan = Loan(**request.json)
         db.session.add(loan)
         db.session.commit()
@@ -45,6 +53,12 @@ def handle_single_loan_add_payment(id):
     if found_loan.status == '已全部发放':
         return jsonify({'message': '已全部发放，不允许添加支付'}), 422
     request.json['money'] = float(request.json['money'])
+    if request.json['money'] <= 0:
+        return jsonify({'message': '还款金额必须为正数'}), 422
+    for k, v in request.json.items():
+        if isinstance(v, str):
+            if v.strip() == '':
+                return jsonify({'message': f'{k} 值不能为空'}), 422
     found_loan.payments.append(Payment(**request.json))
     if sum([x.money for x in found_loan.payments]) > found_loan.money:
         return jsonify({'message': '付款总金额超过贷款金额'}), 422

@@ -23,6 +23,10 @@ def handle_all_client():
             return jsonify({'message': '客户已存在'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
+        for k, v in request.json.items():
+            if isinstance(v, str):
+                if v.strip() == '':
+                    return jsonify({'message': f'{k} 值不能为空'}), 422
         client = Client(**request.json)
         client.client_account_associations = [
             ClientAccountAssociation(**association)
@@ -48,6 +52,10 @@ def handle_single_client(id_number):
 
         client_account_associations = request.json.pop(
             'client_account_associations')
+        for k, v in request.json.items():
+            if isinstance(v, str):
+                if v.strip() == '':
+                    return jsonify({'message': f'{k} 值不能为空'}), 422
         query.update(request.json)
         for association in found_client.client_account_associations:
             db.session.delete(association)
@@ -61,7 +69,6 @@ def handle_single_client(id_number):
         if len(found_client.client_account_associations) != 0:
             return jsonify({'message': '客户还有关联的账户，不允许删除'}), 422
         if len(found_client.loan_client_associations) != 0:
-            print(found_client.loan_client_associations)
             return jsonify({'message': '客户还有关联的贷款记录，不允许删除'}), 422
 
         query.delete()
