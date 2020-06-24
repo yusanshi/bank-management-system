@@ -54,7 +54,7 @@ def handle_single_loan_add_payment(id):
         return jsonify({'message': '已全部发放，不允许添加支付'}), 422
     request.json['money'] = float(request.json['money'])
     if request.json['money'] <= 0:
-        return jsonify({'message': '还款金额必须为正数'}), 422
+        return jsonify({'message': '发放金额必须为正数'}), 422
     for k, v in request.json.items():
         if isinstance(v, str):
             if v.strip() == '':

@@ -18,7 +18,8 @@ def token_required(f):
                 db.session.commit()
                 return jsonify({'message': 'token 已过期，删除之'}), 401
 
-            return jsonify({'message': '找不到 token'}), 401
+            return jsonify({'message':
+                            '找不到 token，可能是因为 token 已过期，您可以尝试重新登录'}), 401
 
         return jsonify({'message': '无 token'}), 401
 

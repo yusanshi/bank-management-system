@@ -26,7 +26,7 @@ paths:
     post:
       tags:
         - user
-      summary: 登录，获取 token 和用户信息
+      summary: 登录，获取 token
       requestBody:
         content:
           application/json:
@@ -132,7 +132,7 @@ paths:
                         client_account_associations:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ClientAndAccount'
+                            $ref: '#/components/schemas/ClientAccountAssociation'
                           
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -158,7 +158,7 @@ paths:
                     client_account_associations:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ClientAndAccount'
+                        $ref: '#/components/schemas/ClientAccountAssociation'
 
       responses:
         '200':
@@ -193,7 +193,7 @@ paths:
                     client_account_associations:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ClientAndAccount'
+                        $ref: '#/components/schemas/ClientAccountAssociation'
 
       responses:
         '200':
@@ -249,7 +249,7 @@ paths:
                         client_account_associations:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ClientAndAccount'
+                            $ref: '#/components/schemas/ClientAccountAssociation'
                             
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -275,7 +275,7 @@ paths:
                     client_account_associations:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ClientAndAccount'
+                        $ref: '#/components/schemas/ClientAccountAssociation'
 
       responses:
         '200':
@@ -310,7 +310,7 @@ paths:
                     client_account_associations:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ClientAndAccount'
+                        $ref: '#/components/schemas/ClientAccountAssociation'
 
       responses:
         '200':
@@ -613,7 +613,7 @@ components:
         overdraft:
           type: number
 
-    ClientAndAccount:
+    ClientAccountAssociation:
       type: object
       properties:
         client_ref:
@@ -671,7 +671,14 @@ components:
         bank_ref:
           $ref: '#/components/schemas/Bank/properties/name'
 
-
+    LoanClientAssociation:
+      type: object
+      properties:
+        loan_ref:
+          $ref: '#/components/schemas/Loan/properties/id'
+        client_ref:
+          $ref: '#/components/schemas/Client/properties/id_number'
+          
     Payment:
       type: object
       properties:

@@ -67,8 +67,7 @@ export default new Vuex.Store({
             const user = {
               username: payload.username,
               token: (response.data as any).token,
-              // expiresAt: Math.floor(Date.now() / 1000) + response.data.expires,
-              expiresAt: Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60, // backend/issues/1
+              expiresAt: Math.floor(Date.now() / 1000) + response.data.expires,
             };
             commit('setUser', user);
             localStorage.setItem('user', JSON.stringify(user));
