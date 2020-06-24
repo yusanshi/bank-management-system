@@ -370,7 +370,7 @@ paths:
                         clients:
                           type: array
                           items:
-                            $ref: '#/components/schemas/Client/properties/id_number'
+                            $ref: '#/components/schemas/Client'
                             
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -408,18 +408,26 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: number
+                allOf:
+                  - $ref: '#/components/schemas/Loan'
+                  - type: object
+                    properties:
+                      payments:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Payment'
+                      clients:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Client'
                     
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
 
-  /loan/{id}:
-    put:
+  /loan/{id}/payment:
+    post:
       tags:
         - loan
       parameters:
@@ -436,16 +444,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Loan'
+              $ref: '#/components/schemas/Payment'
 
       responses:
         '200':
-          description: 修改成功
+          description: 添加成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Loan'
+                  - type: object
+                    properties:
+                      payments:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Payment'
+                      clients:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Client'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/Unprocessable'
 
+  /loan/{id}:
     delete:
       tags:
         - loan
