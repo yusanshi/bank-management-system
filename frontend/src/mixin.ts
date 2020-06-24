@@ -40,56 +40,23 @@ export default Vue.extend({
         .map((e) => e.trim())
         .filter((e) => e !== '');
       if (andWords.length === 0 || orWords.length === 0) {
-        return this.recursivelyFilter(item, search);
+        return this.myFilter(item, search);
       }
       if (andWords.length === 1 && orWords.length === 1) {
-        return this.recursivelyFilter(
+        return this.myFilter(
           item,
           andWords[0].length < orWords[0].length ? andWords[0] : orWords[0],
         );
       }
       if (andWords.length >= 2) {
-        return andWords.every((e) => this.recursivelyFilter(item, e));
+        return andWords.every((e) => this.myFilter(item, e));
       }
       if (orWords.length >= 2) {
-        return orWords.some((e) => this.recursivelyFilter(item, e));
+        return orWords.some((e) => this.myFilter(item, e));
       }
     },
-    recursivelyFilter(obj: object, search: string, depth = 0) {
-      if (depth > 1) {
-        // maximum depth to search
-        return false;
-      }
-      if (
-        Object.values(obj)
-          .filter((e) => typeof e === 'string')
-          .some((e) => e.indexOf(search) !== -1)
-      ) {
-        return true;
-      }
-      if (
-        Object.values(obj)
-          .filter((e) => typeof e === 'number')
-          .map((e) => e.toString())
-          .some((e) => e.indexOf(search) !== -1)
-      ) {
-        return true;
-      }
-      if (
-        Object.values(obj)
-          .filter((e) => Array.isArray(e))
-          .some((e) => e.some((ee: any) => this.recursivelyFilter(ee, search, depth + 1)))
-      ) {
-        return true;
-      }
-      if (
-        Object.values(obj)
-          .filter((e) => typeof e === 'object')
-          .some((e) => this.recursivelyFilter(e, search, depth + 1))
-      ) {
-        return true;
-      }
-      return false;
+    myFilter(obj: object, search: string) {
+      return JSON.stringify(obj).replace(/"[A-Za-z0-9_]+":/g, ' ').indexOf(search) !== -1;
     },
   },
 });

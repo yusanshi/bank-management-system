@@ -110,7 +110,6 @@ import { mapMutations } from 'vuex';
 
 /* eslint-disable @typescript-eslint/camelcase */
 
-// TODO disable empty input
 export default Vue.extend({
   name: 'AccountTable',
   mixins: [mixin],
@@ -119,9 +118,9 @@ export default Vue.extend({
       search: '',
       dialog: false,
       editedIndex: -1,
-      editedItem: this.meta.default,
+      editedItem: { ...this.meta.default },
       originalItem: null,
-      defaultItem: this.meta.default,
+      defaultItem: { ...this.meta.default },
       actionsItem: {
         text: '操作',
         value: 'actions',
