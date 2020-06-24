@@ -1,11 +1,12 @@
 <template>
-   <AccountTable
-      :meta="meta"
-      :items="items"
-      @add="add"
-      @edit="edit"
-      @remove="remove"
-    />
+  <AccountTable
+    :meta="meta"
+    :items="items"
+    :loading="loading"
+    @add="add"
+    @edit="edit"
+    @remove="remove"
+  />
 </template>
 
 <script lang="ts">
@@ -78,7 +79,8 @@ export default Vue.extend({
               {
                 text: '客户身份证号',
                 value: 'client_ref',
-              }, {
+              },
+              {
                 text: '最近访问时间',
                 value: 'last_visit_date',
                 type: 'time',
@@ -89,25 +91,26 @@ export default Vue.extend({
         ],
       },
       items: [] as object[],
+      loading: true,
     };
   },
   computed: {
     ...mapGetters(['getToken']),
     expandingIndex(): number {
-      return this.meta.headers.findIndex((e: any) => e.value === 'data-table-expand');
+      return this.meta.headers.findIndex(
+        (e: any) => e.value === 'data-table-expand',
+      );
     },
   },
   methods: {
     ...mapMutations(['setError']),
     add(item: any) {
       // eslint-disable-next-line
-      item.client_account_associations = item.clients_ref.map(
-        (x: string) => ({
-          client_ref: x,
-          account_ref: item.id,
-          last_visit_date: 0,
-        }),
-      );
+      item.client_account_associations = item.clients_ref.map((x: string) => ({
+        client_ref: x,
+        account_ref: item.id,
+        last_visit_date: 0,
+      }));
       // eslint-disable-next-line no-param-reassign
       delete item.clients_ref;
       axios
@@ -183,7 +186,10 @@ export default Vue.extend({
         headers: { 'X-Token': this.getToken },
       })
       .then((response) => {
-        this.items = response.data.filter((account: any) => account.account_type === 'deposit');
+        this.items = response.data.filter(
+          (account: any) => account.account_type === 'deposit',
+        );
+        this.loading = false;
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {
@@ -198,7 +204,9 @@ export default Vue.extend({
         headers: { 'X-Token': this.getToken },
       })
       .then((response) => {
-        this.meta.headers.find((e) => e.value === 'bank_ref')!.choices = response.data.map((bank: any) => bank.name);
+        this.meta.headers.find(
+          (e) => e.value === 'bank_ref',
+        )!.choices = response.data.map((bank: any) => bank.name);
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {
@@ -226,5 +234,4 @@ export default Vue.extend({
       });
   },
 });
-
 </script>

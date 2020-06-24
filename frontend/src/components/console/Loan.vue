@@ -5,8 +5,10 @@
     :items="formatItems(items, headers)"
     class="elevation-6 pa-3"
     :search="search"
+    :loading="loading"
     no-data-text="无数据"
     no-results-text="无匹配数据"
+    loading-text="加载中"
     item-key="id"
     :show-expand="true"
     :single-expand="true"
@@ -223,6 +225,7 @@ export default Vue.extend({
       ],
       items: [] as object[],
       search: '',
+      loading: true,
       dialog: false,
       focusedIndex: -1,
       editedItem: { ...tempDefault },
@@ -334,7 +337,8 @@ export default Vue.extend({
           .post(
             `${API_URL}/loan/${
               (this.items[this.focusedIndex] as any).id
-            }/payment`, convertedItem,
+            }/payment`,
+            convertedItem,
             {
               headers: { 'X-Token': this.getToken },
             },
@@ -361,6 +365,7 @@ export default Vue.extend({
       })
       .then((response) => {
         this.items = response.data;
+        this.loading = false;
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {

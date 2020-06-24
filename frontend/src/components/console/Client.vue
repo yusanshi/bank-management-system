@@ -1,12 +1,14 @@
 <template>
-<!-- eslint-disable max-len -->
+  <!-- eslint-disable max-len -->
   <v-data-table
     :headers="[...headers, actionsItem]"
     :items="formatItems(items, headers)"
     class="elevation-6 pa-3"
     :search="search"
+    :loading="loading"
     no-data-text="无数据"
     no-results-text="无匹配数据"
+    loading-text="加载中"
     item-key="id_number"
     :show-expand="true"
     :single-expand="true"
@@ -187,6 +189,7 @@ export default Vue.extend({
       ],
       items: [] as object[],
       search: '',
+      loading: true,
       dialog: false,
       editedIndex: -1,
       editedItem: { ...tempDefault },
@@ -208,7 +211,9 @@ export default Vue.extend({
   computed: {
     ...mapGetters(['getToken']),
     expandingIndex(): number {
-      return this.headers.findIndex((e: any) => e.value === 'data-table-expand');
+      return this.headers.findIndex(
+        (e: any) => e.value === 'data-table-expand',
+      );
     },
   },
   methods: {
@@ -295,7 +300,8 @@ export default Vue.extend({
     editItem(item: any) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = { ...item };
-      (this.editedItem as any).accounts_ref = item.client_account_associations.map(
+      (this
+        .editedItem as any).accounts_ref = item.client_account_associations.map(
         (x: any) => x.account_ref,
       );
       this.originalItem = { ...item };
@@ -333,6 +339,7 @@ export default Vue.extend({
       })
       .then((response) => {
         this.items = response.data;
+        this.loading = false;
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {

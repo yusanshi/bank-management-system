@@ -4,8 +4,10 @@
     :items="formatItems(items, meta.headers)"
     class="elevation-6 pa-3"
     :search="search"
+    :loading="loading"
     no-data-text="无数据"
     no-results-text="无匹配数据"
+    loading-text="加载中"
     item-key="id"
     :show-expand="true"
     :single-expand="true"
@@ -126,7 +128,7 @@ export default Vue.extend({
       },
     };
   },
-  props: ['meta', 'items'],
+  props: ['meta', 'items', 'loading'],
   watch: {
     dialog(val) {
       // eslint-disable-next-line no-unused-expressions
@@ -135,7 +137,9 @@ export default Vue.extend({
   },
   computed: {
     expandingIndex(): number {
-      return this.meta.headers.findIndex((e: any) => e.value === 'data-table-expand');
+      return this.meta.headers.findIndex(
+        (e: any) => e.value === 'data-table-expand',
+      );
     },
   },
   methods: {
@@ -143,7 +147,8 @@ export default Vue.extend({
     editItem(item: any) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = { ...item };
-      (this.editedItem as any).clients_ref = item.client_account_associations.map(
+      (this
+        .editedItem as any).clients_ref = item.client_account_associations.map(
         (x: any) => x.client_ref,
       );
       this.originalItem = { ...item };
@@ -176,12 +181,7 @@ export default Vue.extend({
         return;
       }
       if (this.editedIndex > -1) {
-        this.$emit(
-          'edit',
-          convertedItem,
-          this.originalItem,
-          this.editedIndex,
-        );
+        this.$emit('edit', convertedItem, this.originalItem, this.editedIndex);
       } else {
         this.$emit('add', convertedItem);
       }

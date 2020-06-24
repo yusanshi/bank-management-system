@@ -4,9 +4,7 @@
       <template v-for="item in items">
         <v-row v-if="item.heading" :key="item.heading">
           <v-col cols="6">
-            <v-subheader>
-              {{ item.heading }}
-            </v-subheader>
+            <v-subheader>{{ item.heading }}</v-subheader>
           </v-col>
         </v-row>
         <v-list-group
@@ -17,9 +15,7 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
+              <v-list-item-title>{{ item.text }}</v-list-item-title>
             </v-list-item-content>
           </template>
           <v-list-item
@@ -33,26 +29,16 @@
               <v-icon>{{ child.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>
-                {{ child.text }}
-              </v-list-item-title>
+              <v-list-item-title>{{ child.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
-        <v-list-item
-          v-else
-          :key="item.text"
-          :to="item.to"
-          exact
-          link
-        >
+        <v-list-item v-else :key="item.text" :to="item.to" exact link>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>
-              {{ item.text }}
-            </v-list-item-title>
+            <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>

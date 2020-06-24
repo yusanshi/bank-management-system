@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="500" class="mx-auto mt-12" >
+  <v-card max-width="500" class="mx-auto mt-12">
     <v-card-text>
       <v-form>
         <v-text-field
@@ -58,9 +58,13 @@ export default Vue.extend({
     ...mapActions(['logout']),
     changePassword() {
       axios
-        .post(`${API_URL}/user/password`, { old_password: this.oldPassword, new_password: this.newPassword }, {
-          headers: { 'X-Token': this.getToken },
-        })
+        .post(
+          `${API_URL}/user/password`,
+          { old_password: this.oldPassword, new_password: this.newPassword },
+          {
+            headers: { 'X-Token': this.getToken },
+          },
+        )
         .then(() => {
           this.setSuccess('密码修改成功，请重新登录');
           this.logout()
@@ -81,6 +85,4 @@ export default Vue.extend({
     },
   },
 });
-
-// TODO relogin after change password since tokens have been revoked
 </script>
