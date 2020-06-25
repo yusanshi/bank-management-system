@@ -30,33 +30,40 @@ export default Vue.extend({
       return items;
     },
     // eslint-disable-next-line consistent-return
-    customFilter(value: any, search: string, item: any) {
-      const andWords = search
-        .split('&')
-        .map((e) => e.trim())
-        .filter((e) => e !== '');
-      const orWords = search
-        .split('|')
-        .map((e) => e.trim())
-        .filter((e) => e !== '');
-      if (andWords.length === 0 || orWords.length === 0) {
-        return this.myFilter(item, search);
+    customFilter(_: any, search: string, item: any) {
+      const keywords = '()&|';
+      let elements: string[] = [];
+      let element: string[] = [];
+      [...search].forEach((c) => {
+        if (keywords.includes(c)) {
+          elements.push(element.join(''));
+          elements.push(c);
+          element = [];
+        } else {
+          element.push(c);
+        }
+      });
+      elements.push(element.join(''));
+      elements = elements.map((e) => e.trim()).filter((e) => e !== '');
+      const searchInObject = (obj: object, text: string) => JSON.stringify(obj).replace(/"[A-Za-z0-9_]+":/g, ' ').indexOf(text) !== -1;
+      // eslint-disable-next-line no-nested-ternary
+      elements = elements.map((e) => (keywords.includes(e) ? e : (searchInObject(item, e) ? 'true' : 'false'))).map((e) => {
+        if (e === '&') {
+          return '&&';
+        } if (e === '|') {
+          return '||';
+        }
+        return e;
+      });
+      while (elements.length !== 0) {
+        try {
+          // eslint-disable-next-line no-eval
+          return eval(elements.join(''));
+        } catch (e) {
+          elements.pop();
+        }
       }
-      if (andWords.length === 1 && orWords.length === 1) {
-        return this.myFilter(
-          item,
-          andWords[0].length < orWords[0].length ? andWords[0] : orWords[0],
-        );
-      }
-      if (andWords.length >= 2) {
-        return andWords.every((e) => this.myFilter(item, e));
-      }
-      if (orWords.length >= 2) {
-        return orWords.some((e) => this.myFilter(item, e));
-      }
-    },
-    myFilter(obj: object, search: string) {
-      return JSON.stringify(obj).replace(/"[A-Za-z0-9_]+":/g, ' ').indexOf(search) !== -1;
+      return true;
     },
   },
 });

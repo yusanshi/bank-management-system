@@ -21,7 +21,7 @@
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="支持“|”和“&”的使用，但不能混用。如“北京 | 178”、“gmail.com & 159 & 安徽”。"
+          label="支持“|”“&”“(”“)”的使用，如“(北京 | 上海) & 178”。"
           single-line
           hide-details
         ></v-text-field>
