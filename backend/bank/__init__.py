@@ -12,8 +12,7 @@ def create_app():
     CORS(app)
 
     # Set default value
-    app.config.from_mapping(SECRET_KEY='WhosYourDaddy',
-                            SQLALCHEMY_DATABASE_URI='sqlite:///' +
+    app.config.from_mapping(SQLALCHEMY_DATABASE_URI='sqlite:///' +
                             os.path.join(app.instance_path, 'bank.db'),
                             SQLALCHEMY_TRACK_MODIFICATIONS=False,
                             ADMIN_USERNAME='admin',
