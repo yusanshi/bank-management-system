@@ -215,6 +215,9 @@ export default {
   },
 
   watch: {
-    //TODO
+    pathOption(_) {
+      this.init();
+      this.resize();
+    }
   }
 };

@@ -28,38 +28,82 @@
           />
         </v-flex>
         <v-flex lg3 sm6 xs12>
-          <mini-statistic icon="mdi-account-cash" :title="beautifyMoneyDisplay(totalLoanMoney)" sub-title="总贷款金额" color="purple" />
+          <mini-statistic
+            icon="mdi-account-cash"
+            :title="beautifyMoneyDisplay(totalLoanMoney)"
+            sub-title="总贷款金额"
+            color="purple"
+          />
         </v-flex>
 
-        <!-- mini statistic  end -->
         <v-flex lg8 sm12 xs12>
-          <v-widget title="条形图" content-bg="white">
-            <v-btn icon slot="widget-header-action">
-              <v-icon class="text--secondary">mdi-refresh</v-icon>
-            </v-btn>
-            <div slot="widget-content">
-              <e-chart
-                :path-option="[
-                  ['dataset.source', siteTrafficData],
-                  ['color', [color.lightBlue.base, color.green.lighten1]],
+          <v-card>
+            <v-toolbar color="transparent" text dense elevation="0">
+              <v-toolbar-title>
+                <h4>支行统计</h4>
+              </v-toolbar-title>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-row class="ma-2">
+              <v-col>
+                <v-select :items="select.bank.items" v-model="select.bank.value" label="银行"></v-select>
+              </v-col>
+              <v-col>
+                <v-select :items="select.time.items" v-model="select.time.value" label="时间周期"></v-select>
+              </v-col>
+              <v-col>
+                <v-text-field v-model="select.timeLength" label="长度" type="number"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+            <e-chart class="mt-5"
+              :path-option="[
+                  ['dataset.source', bankStaticsData],
+                  ['color', [color.lightBlue.base, color.green.lighten1, color.indigo.base]],
                   ['legend.show', true],
                   ['xAxis.axisLabel.show', true],
                   ['yAxis.axisLabel.show', true],
                   ['grid.left', '2%'],
                   ['grid.bottom', '5%'],
-                  ['grid.right', '3%'],
-                  ['series[0].type', 'bar'],
-                  ['series[0].areaStyle', {}],
+                  ['grid.right', '2%'],
+                  ['series[0].type', 'line'],
                   ['series[0].smooth', true],
+                  ['series[0].lineStyle', {'width': '3'}],
+                  ['series[1].type', 'line'],
                   ['series[1].smooth', true],
-                  ['series[1].type', 'bar'],
-                  ['series[1].areaStyle', {}]
+                  ['series[1].lineStyle', {'width': '3'}],
+                  ['series[2].type', 'line'],
+                  ['series[2].smooth', true],
+                  ['series[2].lineStyle', {'width': '3'}],
                 ]"
-                height="400px"
-                width="100%"
-              />
-            </div>
-          </v-widget>
+              height="400px"
+              width="100%"
+            />
+            <v-divider></v-divider>
+            <e-chart class="mt-5"
+              :path-option="[
+                  ['dataset.source', bankStaticsDataReordered],
+                  ['color', [color.pink.base]],
+                  ['legend.show', true],
+                  ['xAxis.axisLabel.show', true],
+                  ['yAxis.axisLabel.show', true],
+                  ['grid.left', '2%'],
+                  ['grid.bottom', '5%'],
+                  ['grid.right', '2%'],
+                  ['series[0].type', 'line'],
+                  ['series[0].smooth', true],
+                  ['series[0].lineStyle', {'width': '3'}]
+                ]"
+              height="400px"
+              width="100%"
+            />
+            <v-divider></v-divider>
+           <v-data-table class="mt-5"
+          :headers="headers"
+          :items="bankStaticsData"
+          hide-default-footer
+        ></v-data-table>
+          </v-card>
         </v-flex>
         <v-flex lg4 sm12 xs12>
           <v-widget title="贷款状态" content-bg="white">
@@ -91,95 +135,6 @@
             </div>
           </v-widget>
         </v-flex>
-        <v-flex lg4 sm12 xs12>
-          <box-chart
-            card-color="indigo"
-            title="Trending"
-            sub-title="10%"
-            icon="mdi-trending-up"
-            :data="siteTrafficData"
-            :chart-color="[color.indigo.lighten1]"
-            type="line"
-          />
-          <box-chart
-            class="mt-4"
-            card-color="pink"
-            title="Page views"
-            sub-title="10%"
-            icon="mdi-trending-up"
-            :data="siteTrafficData"
-            :chart-color="[color.pink.darken1, 'rgba(255,255,255,0.3)']"
-            gradient
-            type="area"
-          />
-        </v-flex>
-        <v-flex lg4 sm12 xs12>
-          <box-chart
-            card-color="indigo"
-            title="Trending"
-            sub-title="10%"
-            icon="mdi-trending-up"
-            :data="siteTrafficData"
-            :chart-color="[color.indigo.lighten1]"
-            type="line"
-          />
-          <box-chart
-            class="mt-4"
-            card-color="pink"
-            title="Page views"
-            sub-title="10%"
-            icon="mdi-trending-up"
-            :data="siteTrafficData"
-            :chart-color="[color.pink.darken1, 'rgba(255,255,255,0.3)']"
-            gradient
-            type="area"
-          />
-        </v-flex>
-        <!-- statistic section -->
-        <v-flex lg4 sm12 xs12>
-          <linear-statistic
-            title="Sales"
-            sub-title="Sales increase"
-            icon="mdi-trending-up"
-            color="success"
-            :value="15"
-          />
-          <linear-statistic
-            class="my-4"
-            title="Orders"
-            sub-title="Increase"
-            icon="mdi-trending-up"
-            color="pink"
-            :value="30"
-          />
-          <linear-statistic
-            class="my-4"
-            title="Revenue"
-            sub-title="Revenue increase"
-            icon="mdi-trending-up"
-            color="primary"
-            :value="50"
-          />
-          <linear-statistic
-            class="mt-4"
-            title="Cost"
-            sub-title="Cost reduce"
-            icon="mdi-trending-down"
-            color="orange"
-            :value="25"
-          />
-        </v-flex>
-        <!-- Circle statistic -->
-        <v-flex lg4 sm12 xs12 v-for="(item, index) in trending" :key="'c-trending' + index">
-          <circle-statistic
-            :title="item.subheading"
-            :sub-title="item.headline"
-            :caption="item.caption"
-            :icon="item.icon.label"
-            :color="item.linear.color"
-            :value="item.linear.value"
-          />
-        </v-flex>
       </v-layout>
     </v-container>
   </div>
@@ -193,9 +148,6 @@ import EChart from '@/components/chart/echart';
 import MiniStatistic from '@/components/widgets/statistic/MiniStatistic.vue';
 import VWidget from '@/components/VWidget.vue';
 import Material from 'vuetify/es5/util/colors';
-import BoxChart from '@/components/widgets/chart/BoxChart.vue';
-import CircleStatistic from '@/components/widgets/statistic/CircleStatistic.vue';
-import LinearStatistic from '@/components/widgets/statistic/LinearStatistic.vue';
 
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -209,93 +161,130 @@ export default Vue.extend({
     VWidget,
     MiniStatistic,
     EChart,
-    BoxChart,
-    CircleStatistic,
-    LinearStatistic,
   },
   data() {
     return {
       color: Material,
-      trending: [
-        {
-          subheading: 'Email',
-          headline: '15+',
-          caption: 'email opens',
-          percent: 15,
-          icon: {
-            label: 'mdi-email',
-            color: 'info',
-          },
-          linear: {
-            value: 15,
-            color: 'info',
-          },
-        },
-        {
-          subheading: 'Tasks',
-          headline: '90%',
-          caption: 'tasks completed.',
-          percent: 90,
-          icon: {
-            label: 'mdi-list',
-            color: 'primary',
-          },
-          linear: {
-            value: 90,
-            color: 'success',
-          },
-        },
-        {
-          subheading: 'Issues',
-          headline: '100%',
-          caption: 'issues fixed.',
-          percent: 100,
-          icon: {
-            label: 'mdi-duck',
-            color: 'primary',
-          },
-          linear: {
-            value: 100,
-            color: 'error',
-          },
-        },
-      ],
-      siteTrafficData: [
-        { month: 'Jan', 业务金额: 741, 用户数: 463 },
-        { month: 'Feb', 业务金额: 1118, 用户数: 323 },
-        { month: 'Mar', 业务金额: 540, 用户数: 603 },
-        { month: 'Apr', 业务金额: 506, 用户数: 770 },
-        { month: 'May', 业务金额: 691, 用户数: 958 },
-        { month: 'Jun', 业务金额: 1101, 用户数: 639 },
-        { month: 'Jul', 业务金额: 821, 用户数: 351 },
-        { month: 'Aug', 业务金额: 322, 用户数: 845 },
-        { month: 'Sep', 业务金额: 632, 用户数: 675 },
-        { month: 'Oct', 业务金额: 954, 用户数: 701 },
-        { month: 'Nov', 业务金额: 428, 用户数: 969 },
-        { month: 'Dec', 业务金额: 926, 用户数: 488 },
-      ],
+      select: {
+        bank: { items: [] as string[], value: '' },
+        time: { items: ['年', '季', '月'], value: '年' },
+        timeLength: 5,
+      },
       data: {
         banks: [],
         clients: [],
         accounts: [],
         loans: [],
       },
+      headers: ['时间', '储蓄额', '支票额', '贷款额', '开户数'].map((e) => ({
+        text: e,
+        value: e,
+      })),
     };
   },
   computed: {
     ...mapGetters(['getToken']),
     totalDepositBalance(): number {
-      return this.data.accounts.filter((e: any) => e.account_type === 'deposit').map((e: any) => e.balance).reduce((a, b) => a + b, 0);
+      return this.data.accounts
+        .filter((e: any) => e.account_type === 'deposit')
+        .map((e: any) => e.balance)
+        .reduce((a, b) => a + b, 0);
     },
     totalLoanMoney(): number {
-      return this.data.loans.map((e: any) => e.money).reduce((a, b) => a + b, 0);
+      return this.data.loans
+        .map((e: any) => e.money)
+        .reduce((a, b) => a + b, 0);
     },
     loanStatus(): object {
       return ['未开始发放', '发放中', '已全部发放'].map((x) => ({
         value: this.data.loans.filter((e: any) => e.status === x).length,
         name: x,
       }));
-      // TODO update
+    },
+    bankStaticsData(): object {
+      const allAccounts = this.data.accounts.filter(
+        (e: any) => e.bank_ref === this.select.bank.value,
+      );
+      const allDepositAccounts = allAccounts
+        .filter((e: any) => e.account_type === 'deposit')
+        .map((e: any) => ({
+          money: e.balance,
+          date: e.open_date,
+        }));
+      const allChequeAccounts = allAccounts
+        .filter((e: any) => e.account_type === 'cheque')
+        .map((e: any) => ({
+          money: e.balance,
+          date: e.open_date,
+        }));
+      const allPayments = this.data.loans
+        .filter((e: any) => e.bank_ref === this.select.bank.value)
+        .flatMap((e: any) => e.payments)
+        .map((e: any) => ({
+          money: e.money,
+          date: e.pay_date,
+        }));
+      const utc2String = (utc: any, unit: any) => {
+        const year = new Date(utc * 1000).getUTCFullYear();
+        const month = new Date(utc * 1000).getUTCMonth();
+        if (unit === '年') {
+          return `${year}`;
+        }
+        if (unit === '季') {
+          return `${year}Q${Math.floor(month / 3) + 1}`;
+        }
+        if (unit === '月') {
+          return `${year}.${month}`;
+        }
+        return 'Unknown';
+      };
+      let timestamp = Math.floor(Date.now() / 1000);
+      let result = [] as any;
+      while (timestamp > 0) {
+        result.push(utc2String(timestamp, this.select.time.value));
+        timestamp -= 3600 * 24 * 15;
+      }
+      result = result
+        .filter((i: any, idx: number) => result[idx - 1] !== i)
+        .reverse()
+        .map((e: any) => ({
+          时间: e,
+          储蓄额: 0,
+          支票额: 0,
+          贷款额: 0,
+          开户数: 0,
+        }));
+      [
+        [allDepositAccounts, '储蓄额'],
+        [allChequeAccounts, '支票额'],
+        [allPayments, '贷款额'],
+      ].forEach((e: any) => {
+        e[0].forEach((e2: any) => {
+          const found = result.find(
+            (e3: any) => e3.时间 === utc2String(e2.date, this.select.time.value),
+          );
+          found[e[1]] += e2.money;
+        });
+      });
+      allAccounts.forEach((e: any) => {
+        const found = result.find(
+          (e2: any) => e2.时间 === utc2String(e.open_date, this.select.time.value),
+        );
+        found.开户数 += 1;
+      });
+      return result.slice(-this.select.timeLength).map((e: any) => ({
+        时间: e.时间,
+        储蓄额: Number(e.储蓄额.toFixed(2)),
+        支票额: Number(e.支票额.toFixed(2)),
+        贷款额: Number(e.贷款额.toFixed(2)),
+        开户数: e.开户数,
+      }));
+    },
+    bankStaticsDataReordered(): object {
+      return (this.bankStaticsData as any).map((e: any) => ({
+        时间: e.时间,
+        开户数: e.开户数,
+      }));
     },
   },
   methods: {
@@ -321,6 +310,8 @@ export default Vue.extend({
       })
       .then((response) => {
         this.data.banks = response.data;
+        this.select.bank.items = this.data.banks.map((e: any) => e.name);
+        [this.select.bank.value] = this.select.bank.items;
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {

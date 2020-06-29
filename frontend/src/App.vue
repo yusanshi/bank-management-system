@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- TODO don't hard code the color -->
     <v-snackbar
       v-model="infoSnackbar"
       :timeout="2000"

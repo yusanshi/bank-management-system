@@ -25,7 +25,7 @@
 
     <v-card-actions>
       <v-row justify="center">
-        <v-btn class="ma-3" color="primary" @click="changePassword" large>确定</v-btn>
+        <v-btn class="ma-3" color="primary" @click="changePassword">确定</v-btn>
       </v-row>
     </v-card-actions>
   </v-card>
