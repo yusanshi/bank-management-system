@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from bank.models.client import Client
+from bank.models.account import Account
 from bank.models.client_account_association import ClientAccountAssociation
 from bank.routes import token_required, to_dict
 from bank import db
@@ -23,6 +24,19 @@ def handle_all_client():
             return jsonify({'message': '客户已存在'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
+        account_type_bank_name_map = {}
+        for x in client_account_associations:
+            found_account = Account.query.get(x['account_ref'])
+            if (found_account.account_type,
+                    found_account.bank_ref) in account_type_bank_name_map:
+                return jsonify({
+                    'message':
+                    f"该客户的账户{account_type_bank_name_map[(found_account.account_type, found_account.bank_ref)]}和{x['account_ref']}都是{found_account.account_type}账户且都在{found_account.bank_ref}"
+                }), 422
+            else:
+                account_type_bank_name_map[(
+                    found_account.account_type,
+                    found_account.bank_ref)] = x['account_ref']
         for k, v in request.json.items():
             if isinstance(v, str):
                 if v.strip() == '':
@@ -52,6 +66,19 @@ def handle_single_client(id_number):
 
         client_account_associations = request.json.pop(
             'client_account_associations')
+        account_type_bank_name_map = {}
+        for x in client_account_associations:
+            found_account = Account.query.get(x['account_ref'])
+            if (found_account.account_type,
+                    found_account.bank_ref) in account_type_bank_name_map:
+                return jsonify({
+                    'message':
+                    f"该客户的账户{account_type_bank_name_map[(found_account.account_type, found_account.bank_ref)]}和{x['account_ref']}都是{found_account.account_type}账户且都在{found_account.bank_ref}"
+                }), 422
+            else:
+                account_type_bank_name_map[(
+                    found_account.account_type,
+                    found_account.bank_ref)] = x['account_ref']
         for k, v in request.json.items():
             if isinstance(v, str):
                 if v.strip() == '':

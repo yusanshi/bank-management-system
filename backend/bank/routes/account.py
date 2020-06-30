@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from bank.models.account import Account, DepositAccount, ChequeAccount
+from bank.models.client import Client
 from bank.models.client_account_association import ClientAccountAssociation
 from bank.routes import token_required, to_dict
 from bank import db
@@ -23,6 +24,16 @@ def handle_all_account():
             return jsonify({'message': '账户已存在'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
+        for x in client_account_associations:
+            for y in Client.query.get(
+                    x['client_ref']).client_account_associations:
+                if y.account.account_type == request.json[
+                        'account_type'] and y.account.bank_ref == request.json[
+                            'bank_ref']:
+                    return jsonify({
+                        'message':
+                        f"客户{x['client_ref']}在{request.json['bank_ref']}已经有一个{request.json['account_type']}账户"
+                    }), 422
         for k, v in request.json.items():
             if isinstance(v, str):
                 if v.strip() == '':
@@ -54,6 +65,17 @@ def handle_single_account(id):
             return jsonify({'message': '不允许修改账户号'}), 422
         client_account_associations = request.json.pop(
             'client_account_associations')
+        for x in client_account_associations:
+            for y in Client.query.get(
+                    x['client_ref']).client_account_associations:
+                if y.account.id != request.json[
+                        'id'] and y.account.account_type == request.json[
+                            'account_type'] and y.account.bank_ref == request.json[
+                                'bank_ref']:
+                    return jsonify({
+                        'message':
+                        f"客户{x['client_ref']}在{request.json['bank_ref']}已经有一个{request.json['account_type']}账户"
+                    }), 422
         for k, v in request.json.items():
             if isinstance(v, str):
                 if v.strip() == '':
