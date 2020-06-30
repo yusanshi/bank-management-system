@@ -321,6 +321,12 @@
 
 ### 3.1 API
 
+**输入**：`GET/POST/PUT/DELETE https://bank.yusanshi.com/api/v1/<endpoint>`，HTTP request header, HTTP request body
+
+**输出**：HTTP response (application/json)
+
+
+
 > 状态码约定：为简化设计，除了 `200:OK`（请求成功时）和 `401:Unauthorized`（登录时账号或密码不正确，或请求时 token 不正确时）外，其他的报错都返回 `422:Unprocessable Entity`，但返回 422 的同时须在 body 中返回报错信息供客户端显示（若客户端在使用部分接口时，需对都返回 422 的不同结果做区分，则再对相关接口另行设置状态码）。
 
 > 数据库设计：`XXX_ref` 表示一个 Foreign key。
@@ -1495,9 +1501,25 @@ This operation does not require authentication
 </aside>
 ### 3.2 权限认证
 
+**输入1**：`POST https://bank.yusanshi.com/api/v1/user/login`，HTTP request body
+
+**输出1**：HTTP response（带有 token）
+
+**输入2**：HTTP request header（带有 token）
+
+**输出2**：布尔值，指示 token 是否可用，即是否给予授权
+
+
+
 我使用了基于 token 的鉴权系统，管理员账户在登录成功后获取一个 access token（有效期默认为 10 小时），之后的相关操作需要在请求头中加入 `X-Token` 信息，否则返回 [Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) 的报错提示。
 
 ### 3.3 查询功能
+
+**输入**：搜索字符串，表格行
+
+**输出**：布尔值
+
+
 
 查询功能用于在一个表格中输入关键词筛选出想要的行。单纯地看文本在每一行中出现与否，这样的搜索太简单，没法满足更复杂的搜索需求。我想了个办法，加入了关键词 `|`、`&`、`(`、`)`，`|` 表达”or“的意思，`&` 表达”and“的意思，`(` 和 `)` 用于给表达式指定优先级。
 
@@ -1511,6 +1533,21 @@ This operation does not require authentication
 查询表格中，由旭市第一支行发放的、处于发放中的和张三相关的贷款
 ```
 
+为了实现对查询表达式的支持，需要对每个搜索字符串和表格的每一行返回一个 boolean 值，表示在那个搜索字符串下，这一行是否应该出现在结果中。
+
+以搜索词 `s = '(北京 | 上海) & gmail.com'` 为例，首先分析其中的关键词和非关键词，查询每个非关键词在表格行中是否出现，从而把非关键词转变成 boolean 值，如将 `s` 转换为 `s = '(1 | 0) & 1'`，后面的部分其实就是看这个逻辑表达式的结果了。
+
+可以把它当成是一个类似”四则运算表达式求值”的问题，我一开始也确实是这么做的，但是后来突然又想到了 `eval()` 函数，因此直接 `s = eval('(true || false) && true')` 即可（当然，还需要 `try...catch` 下）。和个人的实现相比，直接用 `eval()` 显然要快得多，毕竟自己用 JavaScript 造的轮子比不上浏览器用的 C/C++，更不要说浏览器会用的一些奇奇怪怪的🐮🍺的优化了。
+
+### 3.4 单表格 CRUD
+
+写前端的时候，一开始自然地想到对于每个对象（客户、账户、贷款），写四个界面分别是增、删、改、查，但在看我用的 UI 框架 Vuetify 的文档时，发现它的单表格 CRUD 的 demo 还挺不错的：
+
+![](https://img.yusanshi.com/upload/20200630185326959967.png)
+
+于是我就打算也这么做。但是碰到一个小问题：我的表格同一个行会对应不定长的数据（实际上是另一个表，即“表中表”），就比如显示每个账户的关联客户和访问时间。研究了会，我决定采用 Expandable rows 方案，即每行都有一个按钮，点击后可以显示拓展内容，子表放在这个扩展显示范围中即可。最终效果如下。
+
+![](https://img.yusanshi.com/upload/20200630210947503723.png)
 
 ## 4. 实现与测试
 
@@ -1549,6 +1586,12 @@ This operation does not require authentication
 ![](https://img.yusanshi.com/upload/20200630133135941411.png)
 
 ![](https://img.yusanshi.com/upload/20200630133200356913.png)
+
+“一个客户在一个支行内最多只能开设一个储蓄账户和一个支票账户”
+
+![](https://img.yusanshi.com/upload/20200630184333599991.png)
+
+
 
 ##### 删除客户
 
@@ -1593,6 +1636,10 @@ This operation does not require authentication
 ![](https://img.yusanshi.com/upload/20200630134301780028.png)
 
 ![](https://img.yusanshi.com/upload/20200630134315496710.png)
+
+“一个客户在一个支行内最多只能开设一个储蓄账户和一个支票账户”
+
+![](https://img.yusanshi.com/upload/20200630184703760910.png)
 
 ##### 删除账户
 
@@ -1689,5 +1736,5 @@ This operation does not require authentication
 > 总结本系统开发过程中的主要收获、教训。
 
 - DRY（don't repeat yourself）原则不可用得太极端。一开始尝试将客户管理、账户管理、贷款管理都使用同一个 component，但是发现为了处理他们间的不同，会把这个 component 弄得特别乱，失去了代码的可读性，最后只能放弃。
-
 - 越来越喜欢 Flask 的 lightweight（和 Django 比起来）。
+- 感觉实验报告的模板意义不那么大。

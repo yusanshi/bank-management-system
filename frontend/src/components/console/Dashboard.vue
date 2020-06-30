@@ -145,11 +145,11 @@ import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
 import axios from 'axios';
 import EChart from '@/components/chart/echart';
-import MiniStatistic from '@/components/widgets/statistic/MiniStatistic.vue';
-import VWidget from '@/components/VWidget.vue';
+import MiniStatistic from '@/components/widgets/MiniStatistic.vue';
+import VWidget from '@/components/widgets/VWidget.vue';
 import Material from 'vuetify/es5/util/colors';
 
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
 
 const API_URL = process.env.VUE_APP_API_URL;
 export default Vue.extend({
