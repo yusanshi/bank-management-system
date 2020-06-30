@@ -308,7 +308,7 @@ export default Vue.extend({
     save() {
       if (this.focusedIndex === -1) {
         axios
-          .post(`${API_URL}/loan/`, this.editedItem, {
+          .post(`${API_URL}/loan/`, { ...this.editedItem, money: Number(this.editedItem.money) }, {
             headers: { 'X-Token': this.getToken },
           })
           .then((response) => {
@@ -325,6 +325,7 @@ export default Vue.extend({
       } else {
         const convertedItem = {
           ...this.payments.editedItem,
+          money: Number(this.payments.editedItem.money),
           pay_date: Math.floor(
             new Date(this.payments.editedItem.pay_date).getTime() / 1000,
           ),

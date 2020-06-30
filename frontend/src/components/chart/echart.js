@@ -196,11 +196,9 @@ export default {
           this.chartInstance.resize();
         }, this.widthChangeDelay);
       });
-    },
-
-    resize() {
       this.chartInstance.resize();
     },
+
     clean() {
       window.removeEventListener('resize', this.chartInstance.resize);
       this.chartInstance.clear();
@@ -215,9 +213,8 @@ export default {
   },
 
   watch: {
-    pathOption(_) {
+    pathOption() {
       this.init();
-      this.resize();
     }
   }
 };

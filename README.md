@@ -26,9 +26,19 @@ yarn serve
 - Icons: [Kiranshastry](https://www.flaticon.com/authors/kiranshastry)
 - Dashboard: [vue-material-admin](https://github.com/tookit/)
 
+## Documentation
 
+> See [report.md](./docs/report.md) for more details.
 
+### API
 
+[api.yaml](./docs/api.yaml) (Copy its content and paste into <https://editor.swagger.io/>)
+
+### ER model
+
+![ER](./docs/ER.png)
+
+### Requirement
 
 
 > **实验要求**
